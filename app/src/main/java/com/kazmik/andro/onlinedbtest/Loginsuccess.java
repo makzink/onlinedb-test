@@ -103,14 +103,13 @@ public class Loginsuccess extends Activity {
 
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
-            JSONArray jsonMainNode = jsonResponse.optJSONArray("emp_info");
+            JSONArray jsonMainNode = jsonResponse.optJSONArray("user_info");
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                String name = jsonChildNode.optString("employee name");
-                String number = jsonChildNode.optString("employee no");
-                String outPut = name + "-" + number;
-                employeeList.add(createEmployee("employees", outPut));
+                String name = jsonChildNode.optString("username");
+                String outPut = name;
+                employeeList.add(createEmployee("usernames", outPut));
             }
         } catch (JSONException e) {
             Toast.makeText(getApplicationContext(), "Error" + e.toString(),
@@ -119,7 +118,7 @@ public class Loginsuccess extends Activity {
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, employeeList,
                 android.R.layout.simple_list_item_1,
-                new String[] { "employees" }, new int[] { android.R.id.text1 });
+                new String[] { "usernames" }, new int[] { android.R.id.text1 });
         listView.setAdapter(simpleAdapter);
     }
 
