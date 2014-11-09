@@ -3,6 +3,7 @@ package com.kazmik.andro.onlinedbtest;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -221,6 +222,10 @@ public class Loginsuccess extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id==R.id.action_newentry){
+            Intent k = new Intent(Loginsuccess.this,AddNewEntry.class);
+            startActivity(k);
         }
         return super.onOptionsItemSelected(item);
     }
