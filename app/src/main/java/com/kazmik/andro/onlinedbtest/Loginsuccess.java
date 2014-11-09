@@ -182,8 +182,8 @@ public class Loginsuccess extends Activity {
         }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(this, employeeList,
-                android.R.layout.simple_list_item_1,
-                new String[] { "usernames" }, new int[] { android.R.id.text1 });
+                R.layout.listviewsamp,
+                new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
         listView.setAdapter(simpleAdapter);
 
         dialog.dismiss();
