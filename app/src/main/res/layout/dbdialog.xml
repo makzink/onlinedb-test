@@ -43,9 +43,8 @@
         android:layout_height="wrap_content"
         android:text="Blood Group :"
         android:id="@+id/tvdbg"
-        android:layout_below="@+id/tvdclass"
-        android:layout_toLeftOf="@+id/tvdiagclass"
-        android:layout_marginTop="15dp" />
+        android:layout_below="@+id/tvdbatch"
+        android:layout_toLeftOf="@+id/tvdiagclass" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -92,9 +91,11 @@
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/bdiagdok"
+        android:layout_marginTop="16dp"
         android:layout_below="@+id/tvdlastdon"
-        android:layout_alignRight="@+id/tvdiaglastdon"
-        android:layout_alignEnd="@+id/tvdiaglastdon" />
+        android:layout_alignLeft="@+id/tvdclass"
+        android:layout_alignStart="@+id/tvdclass"
+        android:layout_marginLeft="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -118,10 +119,9 @@
         android:layout_height="wrap_content"
         android:text="Last Donated on :"
         android:id="@+id/tvdlastdon"
-        android:layout_below="@+id/tvdmob"
+        android:layout_alignTop="@+id/tvdiaglastdon"
         android:layout_alignRight="@+id/tvdbg"
-        android:layout_alignEnd="@+id/tvdbg"
-        android:layout_marginTop="18dp" />
+        android:layout_alignEnd="@+id/tvdbg" />
 
     <TextView
         android:layout_width="wrap_content"
