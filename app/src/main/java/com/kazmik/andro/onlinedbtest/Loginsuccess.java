@@ -34,7 +34,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class Loginsuccess extends ListActivity {
+public class Loginsuccess extends Activity {
 
     private String jsonResult;
     JSONArray jsonMainNode;
@@ -48,6 +48,7 @@ public class Loginsuccess extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
         listView = (ListView) findViewById(R.id.listView1);
+        
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching Data");
         dialog.setMessage("Populating List");
