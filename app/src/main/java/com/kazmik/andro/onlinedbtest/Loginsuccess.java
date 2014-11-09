@@ -1,5 +1,6 @@
 package com.kazmik.andro.onlinedbtest;
 
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
@@ -30,8 +31,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Loginsuccess extends Activity {
@@ -48,12 +53,56 @@ public class Loginsuccess extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
         listView = (ListView) findViewById(R.id.listView1);
-        
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching Data");
         dialog.setMessage("Populating List");
         dialog.show();
         accessWebService();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final View selectedView = view ;
+                String name = listView.getItemAtPosition(position).toString();
+                final Dialog diag = new Dialog(Loginsuccess.this);
+                dialog.setContentView(R.layout.dbdialog);
+                dialog.setTitle("Detail of Student");
+                TextView namea= (TextView)dialog.findViewById(R.id.tvdiagname);
+                TextView classa= (TextView)dialog.findViewById(R.id.tvdiagclass);
+                TextView bg= (TextView)dialog.findViewById(R.id.tvdiagbg);
+                TextView mob= (TextView)dialog.findViewById(R.id.tvdiagmob);
+                TextView hos= (TextView)dialog.findViewById(R.id.tvdiaghostel);
+                try {
+                    JSONObject jsonChildNode = null;
+                for (int i = 0; i < jsonMainNode.length(); i++) {
+
+                    jsonChildNode = jsonMainNode.getJSONObject(i);
+
+                    if(name.equals(jsonChildNode.optString("name")))
+                    {
+                        namea.setText(name);
+                        classa.setText(jsonChildNode.optString("class"));
+                        bg.setText(jsonChildNode.optString("bg"));
+                        mob.setText(jsonChildNode.optString("mob"));
+                        hos.setText(jsonChildNode.optString("address"));
+                    }
+
+                }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                Button bok = (Button)dialog.findViewById(R.id.bdiagdok);
+                bok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+
+            }
+        });
     }
 
     public void accessWebService() {
@@ -133,6 +182,7 @@ public class Loginsuccess extends Activity {
                 android.R.layout.simple_list_item_1,
                 new String[] { "usernames" }, new int[] { android.R.id.text1 });
         listView.setAdapter(simpleAdapter);
+
         dialog.dismiss();
     }
 
