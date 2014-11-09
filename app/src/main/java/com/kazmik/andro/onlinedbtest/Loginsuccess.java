@@ -66,21 +66,22 @@ public class Loginsuccess extends Activity {
                 TextView txt  = (TextView) view.findViewById(R.id.tvlistviewname);
                 String name = txt.getText().toString();
                 final Dialog diag = new Dialog(Loginsuccess.this);
+                diag.setCanceledOnTouchOutside(false);
                 diag.setCancelable(false);
-                dialog.setContentView(R.layout.dbdialog);
-                dialog.setTitle("Detail of Student");
-                TextView namea= (TextView)dialog.findViewById(R.id.tvdiagname);
-                TextView classa= (TextView)dialog.findViewById(R.id.tvdiagclass);
-                TextView bg= (TextView)dialog.findViewById(R.id.tvdiagbg);
-                TextView mob= (TextView)dialog.findViewById(R.id.tvdiagmob);
-                TextView hos= (TextView)dialog.findViewById(R.id.tvdiaghostel);
+                diag.setContentView(R.layout.dbdialog);
+                diag.setTitle("Detail of Student");
+                TextView namea= (TextView)diag.findViewById(R.id.tvdiagname);
+                TextView classa= (TextView)diag.findViewById(R.id.tvdiagclass);
+                TextView bg= (TextView)diag.findViewById(R.id.tvdiagbg);
+                TextView mob= (TextView)diag.findViewById(R.id.tvdiagmob);
+                TextView hos= (TextView)diag.findViewById(R.id.tvdiaghostel);
                 try {
                     JSONObject jsonChildNode = null;
-                    Toast.makeText(Loginsuccess.this,name,Toast.LENGTH_SHORT).show();
+
                 for (int i = 0; i < jsonMainNode.length(); i++) {
 
                     jsonChildNode = jsonMainNode.getJSONObject(i);
-                        Toast.makeText(Loginsuccess.this,jsonChildNode.optString("name"),Toast.LENGTH_SHORT).show();
+
 
                     if(name.equals(jsonChildNode.optString("name")))
                     {
@@ -97,14 +98,14 @@ public class Loginsuccess extends Activity {
                 }
 
 
-                Button bok = (Button)dialog.findViewById(R.id.bdiagdok);
+                Button bok = (Button)diag.findViewById(R.id.bdiagdok);
                 bok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        dialog.dismiss();
+                        diag.dismiss();
                     }
                 });
-                dialog.show();
+                diag.show();
 
             }
         });
