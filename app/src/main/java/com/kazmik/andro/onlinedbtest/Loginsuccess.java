@@ -113,7 +113,7 @@ public class Loginsuccess extends Activity {
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                String name = jsonChildNode.optString("username");
+                String name = jsonChildNode.optString("name");
                 String outPut = name;
                 employeeList.add(createEmployee("usernames", outPut));
             }
