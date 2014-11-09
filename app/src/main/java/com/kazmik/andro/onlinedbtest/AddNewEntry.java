@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -15,21 +16,44 @@ import android.widget.Toast;
 
 public class AddNewEntry extends ActionBarActivity {
 
-    EditText name;
-    Spinner classs;
-    String[] classes;
+    EditText name,batch,addr,mob;
+    Button sumbit;
+    Spinner classs,bg;
+    String[] classes,groups;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_entry);
         name = (EditText)findViewById(R.id.etanename);
+        sumbit = (Button)findViewById(R.id.banesubmit);
         classs = (Spinner)findViewById(R.id.saneclass);
+        batch = (EditText)findViewById(R.id.etanebatch);
+        addr = (EditText)findViewById(R.id.etaneaddr);
+        mob = (EditText)findViewById(R.id.etanemob);
+        bg = (Spinner)findViewById(R.id.sanebg);
         classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
+        groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, classes);
         adapter_state
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter_state_bg = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, groups);
+        adapter_state
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         classs.setAdapter(adapter_state);
+        bg.setAdapter(adapter_state_bg);
+        bg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(AddNewEntry.this,bg.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         classs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
