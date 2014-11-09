@@ -1,5 +1,6 @@
 package com.kazmik.andro.onlinedbtest;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -36,12 +37,17 @@ public class Loginsuccess extends Activity {
     private String jsonResult;
     String url="http://kazmikkhan.comli.com/phpandroafterlogin.php";
     private ListView listView;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
         listView = (ListView) findViewById(R.id.listView1);
+        dialog = new ProgressDialog(this);
+        dialog.setTitle("Fetching Data");
+        dialog.setMessage("Populating List");
+        dialog.show();
         accessWebService();
     }
 
@@ -120,6 +126,7 @@ public class Loginsuccess extends Activity {
                 android.R.layout.simple_list_item_1,
                 new String[] { "usernames" }, new int[] { android.R.id.text1 });
         listView.setAdapter(simpleAdapter);
+        dialog.dismiss();
     }
 
     private HashMap<String, String> createEmployee(String name, String number) {
