@@ -28,7 +28,6 @@ public class AddNewEntry extends ActionBarActivity {
 
     EditText name,batch,addr,mob,lastdon;
     Button submit;
-    ProgressDialog progress;
 
     String clas,bloodg,namea,mobile,address,last;
     int batcha;
@@ -89,7 +88,7 @@ public class AddNewEntry extends ActionBarActivity {
                 batcha = Integer.parseInt(batch.getText().toString());
                 address = addr.getText().toString();
                 last = lastdon.getText().toString();
-                Toast.makeText(AddNewEntry.this,namea+"\n"+clas+"\n"+batcha+"-"+(batcha+4)+"\n"+bloodg+"\n"+mobile+"\n"+address+"\n"+last,Toast.LENGTH_SHORT).show();
+               // Toast.makeText(AddNewEntry.this,namea+"\n"+clas+"\n"+batcha+"-"+(batcha+4)+"\n"+bloodg+"\n"+mobile+"\n"+address+"\n"+last,Toast.LENGTH_SHORT).show();
                 submitdata();
 
 
@@ -99,12 +98,23 @@ public class AddNewEntry extends ActionBarActivity {
     }
 
     public void submitdata(){
+       SubmitDatatophp task = new SubmitDatatophp(this);
+        task.execute();
 
     }
     private class SubmitDatatophp extends AsyncTask<String, Void, String> {
+        ProgressDialog progress;
+        Context c;
+        public SubmitDatatophp(AddNewEntry entry) {
+            c = entry;
+            progress= new ProgressDialog(this.c);
+        }
+
         protected void onPreExecute(){
 
             progress.setTitle("Submitting Data");
+            progress.setCanceledOnTouchOutside(false);
+            progress.setCancelable(false);
             progress.setMessage("Sending data to server");
             progress.show();
         }

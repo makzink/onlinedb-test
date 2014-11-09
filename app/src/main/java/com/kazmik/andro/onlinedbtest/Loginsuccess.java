@@ -58,6 +58,8 @@ public class Loginsuccess extends Activity {
         listView = (ListView) findViewById(R.id.listView1);
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching Data");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setMessage("Populating List");
         dialog.show();
         accessWebService();

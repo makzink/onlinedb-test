@@ -39,6 +39,8 @@ public class SigninActivity  extends AsyncTask<String,Void,String>{
     protected void onPreExecute(){
 
         progress.setTitle("Logging In");
+        progress.setCanceledOnTouchOutside(false);
+        progress.setCancelable(false);
         progress.setMessage("Authenticating User");
         progress.show();
     }
