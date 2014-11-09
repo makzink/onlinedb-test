@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,6 +67,8 @@ public class Loginsuccess extends Activity {
                 //String name = listView.getItemAtPosition(position).toString();
                 TextView txt  = (TextView) view.findViewById(R.id.tvlistviewname);
                 String name = txt.getText().toString();
+
+                SimpleDateFormat postFormater = new SimpleDateFormat("MMM dd");
                 final Dialog diag = new Dialog(Loginsuccess.this);
                 diag.setCanceledOnTouchOutside(false);
                 diag.setCancelable(false);
@@ -72,9 +76,11 @@ public class Loginsuccess extends Activity {
                 diag.setTitle("Detail of Student");
                 TextView namea= (TextView)diag.findViewById(R.id.tvdiagname);
                 TextView classa= (TextView)diag.findViewById(R.id.tvdiagclass);
+                TextView batch = (TextView)diag.findViewById(R.id.tvdiagbatch);
                 TextView bg= (TextView)diag.findViewById(R.id.tvdiagbg);
                 TextView mob= (TextView)diag.findViewById(R.id.tvdiagmob);
                 TextView hos= (TextView)diag.findViewById(R.id.tvdiaghostel);
+                TextView lastdon =(TextView)diag.findViewById(R.id.tvdiaglastdon);
                 try {
                     JSONObject jsonChildNode = null;
 
@@ -88,8 +94,11 @@ public class Loginsuccess extends Activity {
                         namea.setText(name);
                         classa.setText(jsonChildNode.optString("class"));
                         bg.setText(jsonChildNode.optString("bg"));
+                        batch.setText(jsonChildNode.optString("batchfrom")+"-"+jsonChildNode.optString("batchto"));
                         mob.setText(jsonChildNode.optString("mob"));
                         hos.setText(jsonChildNode.optString("address"));
+                        lastdon.setText(jsonChildNode.optString("lastdon"));
+
                     }
 
                 }

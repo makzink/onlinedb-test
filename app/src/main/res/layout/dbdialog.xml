@@ -19,8 +19,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvdiagname"
-        android:layout_marginLeft="71dp"
-        android:layout_alignParentTop="true"
+        android:layout_above="@+id/tvdclass"
         android:layout_toRightOf="@+id/tvdname" />
 
     <TextView
@@ -36,9 +35,8 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvdiagclass"
-        android:layout_below="@+id/tvdiagname"
-        android:layout_alignLeft="@+id/tvdiagname"
-        android:layout_alignStart="@+id/tvdiagname" />
+        android:layout_below="@+id/tvdname"
+        android:layout_toRightOf="@+id/tvdname" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -46,16 +44,16 @@
         android:text="Blood Group :"
         android:id="@+id/tvdbg"
         android:layout_below="@+id/tvdclass"
-        android:layout_toLeftOf="@+id/tvdiagname" />
+        android:layout_toLeftOf="@+id/tvdiagclass"
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvdiagbg"
-        android:layout_below="@+id/tvdiagclass"
-        android:layout_alignLeft="@+id/tvdiagclass"
-        android:layout_alignStart="@+id/tvdiagclass" />
+        android:layout_above="@+id/tvdmob"
+        android:layout_toRightOf="@+id/tvdbg" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,8 +61,7 @@
         android:text="Mobile :"
         android:id="@+id/tvdmob"
         android:layout_below="@+id/tvdbg"
-        android:layout_alignRight="@+id/tvdbg"
-        android:layout_alignEnd="@+id/tvdbg" />
+        android:layout_toLeftOf="@+id/tvdiagbg" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,8 +69,7 @@
         android:text="New Text"
         android:id="@+id/tvdiagmob"
         android:layout_alignTop="@+id/tvdmob"
-        android:layout_alignLeft="@+id/tvdiagbg"
-        android:layout_alignStart="@+id/tvdiagbg" />
+        android:layout_toRightOf="@+id/tvdmob" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,7 +77,7 @@
         android:text="Hostel :"
         android:id="@+id/tvdhostel"
         android:layout_below="@+id/tvdmob"
-        android:layout_toLeftOf="@+id/tvdiagname" />
+        android:layout_toLeftOf="@+id/tvdiagmob" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -89,15 +85,50 @@
         android:text="New Text"
         android:id="@+id/tvdiaghostel"
         android:layout_below="@+id/tvdiagmob"
-        android:layout_alignLeft="@+id/tvdiagmob"
-        android:layout_alignStart="@+id/tvdiagmob" />
+        android:layout_toRightOf="@+id/tvdmob" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/bdiagdok"
+        android:layout_below="@+id/tvdlastdon"
+        android:layout_alignRight="@+id/tvdiaglastdon"
+        android:layout_alignEnd="@+id/tvdiaglastdon" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Batch :"
+        android:id="@+id/tvdbatch"
+        android:layout_below="@+id/tvdclass"
+        android:layout_alignRight="@+id/tvdbg"
+        android:layout_alignEnd="@+id/tvdbg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvdiagbatch"
+        android:layout_alignBottom="@+id/tvdbatch"
+        android:layout_toRightOf="@+id/tvdbg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Donated on :"
+        android:id="@+id/tvdlastdon"
+        android:layout_below="@+id/tvdmob"
+        android:layout_alignRight="@+id/tvdbg"
+        android:layout_alignEnd="@+id/tvdbg"
+        android:layout_marginTop="18dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvdiaglastdon"
         android:layout_below="@+id/tvdiaghostel"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/tvdhostel" />
 
 </RelativeLayout>
