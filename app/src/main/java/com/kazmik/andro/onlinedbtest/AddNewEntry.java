@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 public class AddNewEntry extends ActionBarActivity {
 
-    EditText name,batch,addr,mob;
-    Button sumbit;
+    EditText name,batch,addr,mob,lastdon;
+    Button submit;
+    String clas,bloodg,namea,mobile,address,last;
+    int batcha;
     Spinner classs,bg;
     String[] classes,groups;
     @Override
@@ -25,10 +27,11 @@ public class AddNewEntry extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_entry);
         name = (EditText)findViewById(R.id.etanename);
-        sumbit = (Button)findViewById(R.id.banesubmit);
+        submit = (Button)findViewById(R.id.banesubmit);
         classs = (Spinner)findViewById(R.id.saneclass);
         batch = (EditText)findViewById(R.id.etanebatch);
         addr = (EditText)findViewById(R.id.etaneaddr);
+        lastdon = (EditText)findViewById(R.id.etanelastdon);
         mob = (EditText)findViewById(R.id.etanemob);
         bg = (Spinner)findViewById(R.id.sanebg);
         classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
@@ -46,7 +49,7 @@ public class AddNewEntry extends ActionBarActivity {
         bg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(AddNewEntry.this,bg.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
+                bloodg = bg.getSelectedItem().toString();
             }
 
             @Override
@@ -58,7 +61,7 @@ public class AddNewEntry extends ActionBarActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 classs.setSelection(position);
-                Toast.makeText(AddNewEntry.this,classs.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
+                clas = classs.getSelectedItem().toString();
             }
 
             @Override
@@ -66,7 +69,19 @@ public class AddNewEntry extends ActionBarActivity {
 
             }
         });
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                namea = name.getText().toString();
+                mobile = mob.getText().toString();
+                batcha = Integer.parseInt(batch.getText().toString());
+                address = addr.getText().toString();
+                last = lastdon.getText().toString();
+                Toast.makeText(AddNewEntry.this,namea+"\n"+clas+"\n"+batcha+"-"+(batcha+4)+"\n"+bloodg+"\n"+mobile+"\n"+address,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
 
     @Override
