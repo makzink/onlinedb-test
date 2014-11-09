@@ -1,5 +1,6 @@
 package com.kazmik.andro.onlinedbtest;
 
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +34,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-public class Loginsuccess extends Activity {
+public class Loginsuccess extends ListActivity {
 
     private String jsonResult;
+    JSONArray jsonMainNode;
+    JSONObject jsonResponse;
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     ProgressDialog dialog;
@@ -108,13 +112,15 @@ public class Loginsuccess extends Activity {
         List<Map<String, String>> employeeList = new ArrayList<Map<String, String>>();
 
         try {
-            JSONObject jsonResponse = new JSONObject(jsonResult);
-            JSONArray jsonMainNode = jsonResponse.optJSONArray("user_info");
+            jsonResponse = new JSONObject(jsonResult);
+             jsonMainNode = jsonResponse.optJSONArray("user_info");
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 String name = jsonChildNode.optString("name");
-                String outPut = name;
+                String outPut;
+
+                 outPut=name;
                 employeeList.add(createEmployee("usernames", outPut));
             }
         } catch (JSONException e) {
