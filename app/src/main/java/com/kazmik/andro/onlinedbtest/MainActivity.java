@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
     public void loginPost(View view){
         String username = usernameField.getText().toString();
         String pass = password.getText().toString();
+
         new SigninActivity(this,status).execute(username,pass);
 
     }

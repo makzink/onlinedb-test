@@ -16,6 +16,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,15 +27,20 @@ import static android.support.v4.app.ActivityCompat.startActivity;
 public class SigninActivity  extends AsyncTask<String,Void,String>{
 
     TextView statuss;
+    ProgressDialog progress;
     private Context context;
     private int byGetOrPost = 0;
     //flag 0 means get and 1 means post.(By default it is get.)
     public SigninActivity(Context context, TextView status) {
         this.context = context; this.statuss = status;
+         progress= new ProgressDialog(this.context);
     }
 
     protected void onPreExecute(){
 
+        progress.setTitle("Logining In");
+        progress.setMessage("Authenticating User");
+        progress.show();
     }
     @Override
     protected String doInBackground(String... arg0) {
@@ -79,10 +85,12 @@ public class SigninActivity  extends AsyncTask<String,Void,String>{
             Intent i = new Intent(context, Loginsuccess.class);
             context.startActivity(i);
             this.statuss.setText(" ");
+            progress.dismiss();
         }
         else
         {
             this.statuss.setText("Invalid Credentials!!!");
+            progress.dismiss();
         }
     }
 }
