@@ -1,6 +1,9 @@
 package com.kazmik.andro.onlinedbtest;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,11 +16,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 
 public class AddNewEntry extends ActionBarActivity {
 
     EditText name,batch,addr,mob,lastdon;
     Button submit;
+    ProgressDialog progress;
+
     String clas,bloodg,namea,mobile,address,last;
     int batcha;
     Spinner classs,bg;
@@ -87,7 +99,80 @@ public class AddNewEntry extends ActionBarActivity {
     }
 
     public void submitdata(){
-        
+
+    }
+    private class SubmitDatatophp extends AsyncTask<String, Void, String> {
+        protected void onPreExecute(){
+
+            progress.setTitle("Submitting Data");
+            progress.setMessage("Sending data to server");
+            progress.show();
+        }
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                String link="http://kazmikkhan.comli.com/phpinsertdetails.php";
+                String data  = URLEncoder.encode("name", "UTF-8")
+                        + "=" + URLEncoder.encode(namea, "UTF-8");
+                data += "&" + URLEncoder.encode("clas", "UTF-8")
+                        + "=" + URLEncoder.encode(clas, "UTF-8");
+                data += "&" + URLEncoder.encode("batchfrom", "UTF-8")
+                        + "=" + URLEncoder.encode(String.valueOf(batcha), "UTF-8");
+                data += "&" + URLEncoder.encode("batchto", "UTF-8")
+                        + "=" + URLEncoder.encode(String.valueOf(batcha+4), "UTF-8");
+                data += "&" + URLEncoder.encode("bg", "UTF-8")
+                        + "=" + URLEncoder.encode(bloodg, "UTF-8");
+                data += "&" + URLEncoder.encode("mob", "UTF-8")
+                        + "=" + URLEncoder.encode(mobile, "UTF-8");
+                data += "&" + URLEncoder.encode("address", "UTF-8")
+                        + "=" + URLEncoder.encode(address, "UTF-8");
+                data += "&" + URLEncoder.encode("lastdon", "UTF-8")
+                        + "=" + URLEncoder.encode(last, "UTF-8");
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter
+                        (conn.getOutputStream());
+                wr.write( data );
+                wr.flush();
+                BufferedReader reader = new BufferedReader
+                        (new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                // Read Server Response
+                while((line = reader.readLine()) != null)
+                {
+                    sb.append(line);
+                    break;
+                }
+
+                return sb.toString();
+
+            }
+            catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s.equals("success"))
+            {
+                Intent k = new Intent(AddNewEntry.this,Loginsuccess.class);
+                startActivity(k);
+                Toast.makeText(AddNewEntry.this,"Added Successfully",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }
+            else
+            {
+                Intent k = new Intent(AddNewEntry.this,Loginsuccess.class);
+                startActivity(k);
+                Toast.makeText(AddNewEntry.this,"Record Not Added",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }
+        }
     }
 
     @Override
