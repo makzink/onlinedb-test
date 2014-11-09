@@ -35,7 +35,7 @@ import android.widget.Toast;
 public class Loginsuccess extends Activity {
 
     private String jsonResult;
-    String url="http://kazmikkhan.comli.com/phpandroafterlogin.php";
+    String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     ProgressDialog dialog;
 
