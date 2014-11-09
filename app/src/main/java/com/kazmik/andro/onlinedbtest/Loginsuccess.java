@@ -63,6 +63,7 @@ public class Loginsuccess extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final View selectedView = view ;
                 String name = listView.getItemAtPosition(position).toString();
+
                 final Dialog diag = new Dialog(Loginsuccess.this);
                 dialog.setContentView(R.layout.dbdialog);
                 dialog.setTitle("Detail of Student");
@@ -73,9 +74,11 @@ public class Loginsuccess extends Activity {
                 TextView hos= (TextView)dialog.findViewById(R.id.tvdiaghostel);
                 try {
                     JSONObject jsonChildNode = null;
+                    Toast.makeText(Loginsuccess.this,name,Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < jsonMainNode.length(); i++) {
 
                     jsonChildNode = jsonMainNode.getJSONObject(i);
+                        Toast.makeText(Loginsuccess.this,jsonChildNode.optString("name"),Toast.LENGTH_SHORT).show();
 
                     if(name.equals(jsonChildNode.optString("name")))
                     {
