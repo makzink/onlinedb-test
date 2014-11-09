@@ -77,12 +77,18 @@ public class AddNewEntry extends ActionBarActivity {
                 batcha = Integer.parseInt(batch.getText().toString());
                 address = addr.getText().toString();
                 last = lastdon.getText().toString();
-                Toast.makeText(AddNewEntry.this,namea+"\n"+clas+"\n"+batcha+"-"+(batcha+4)+"\n"+bloodg+"\n"+mobile+"\n"+address,Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddNewEntry.this,namea+"\n"+clas+"\n"+batcha+"-"+(batcha+4)+"\n"+bloodg+"\n"+mobile+"\n"+address+"\n"+last,Toast.LENGTH_SHORT).show();
+                submitdata();
+
+
+
             }
         });
     }
 
-
+    public void submitdata(){
+        
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
