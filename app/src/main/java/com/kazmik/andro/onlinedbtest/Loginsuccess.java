@@ -62,9 +62,11 @@ public class Loginsuccess extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final View selectedView = view ;
-                String name = listView.getItemAtPosition(position).toString();
-
+                //String name = listView.getItemAtPosition(position).toString();
+                TextView txt  = (TextView) view.findViewById(R.id.tvlistviewname);
+                String name = txt.getText().toString();
                 final Dialog diag = new Dialog(Loginsuccess.this);
+                diag.setCancelable(false);
                 dialog.setContentView(R.layout.dbdialog);
                 dialog.setTitle("Detail of Student");
                 TextView namea= (TextView)dialog.findViewById(R.id.tvdiagname);
