@@ -10,7 +10,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.kazmik.andro.onlinedbtest.R;
 import java.io.BufferedReader;
@@ -56,7 +59,7 @@ public class Loginsuccess extends Activity {
     JSONArray jsonMainNode;
     JSONObject jsonResponse;
     JSONObject jsonChildNode = null,node = null;
-
+    SimpleAdapter simpleAdapter;
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     ProgressDialog dialog;
@@ -182,6 +185,98 @@ public class Loginsuccess extends Activity {
             }
         });
     }
+
+
+    ////
+    class ModeCallback implements ListView.MultiChoiceModeListener {
+
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.list_multiple_delete, menu);
+            mode.setTitle("Select Items");
+            return true;
+        }
+
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.share:
+                    final int c=listView.getCheckedItemCount();
+                    final int count = listView.getCount();
+                    final SparseBooleanArray checked = listView.getCheckedItemPositions();
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(Loginsuccess.this);
+                    alert.setTitle("Confirm Delete");
+                    alert
+                            .setMessage("Do you want to DELETE these entry?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, close
+                                    // current activity
+                                    String names =  null;
+                                    for (int i = 0; i < count; i++) {
+                                        if (checked.valueAt(i) == true) {
+                                            names +=listView.getItemAtPosition(i).toString()+"\n";
+
+                                        }
+
+                                    }
+                                   Toast.makeText(Loginsuccess.this,names,Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Loginsuccess.this, "Deleted " + c +
+                                            " items", Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertDialog = alert.create();
+
+                    // show it
+                    alertDialog.show();
+                    mode.finish();
+                    break;
+                default:
+                    Toast.makeText(Loginsuccess.this, "Clicked " + item.getTitle(),
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
+            return true;
+        }
+
+        public void onDestroyActionMode(ActionMode mode) {
+        }
+
+        public void onItemCheckedStateChanged(ActionMode mode,
+                                              int position, long id, boolean checked) {
+            final int checkedCount = listView.getCheckedItemCount();
+            switch (checkedCount) {
+                case 0:
+                    mode.setSubtitle(null);
+                    break;
+                case 1:
+                    mode.setSubtitle("One item selected");
+                    break;
+                default:
+                    mode.setSubtitle("" + checkedCount + " items selected");
+                    break;
+            }
+        }
+
+    }
+
+
+    //
+    ///
+    ///
 
     private void deleterecord(String name, String cls, String bch) {
         deleterecordphp del = new deleterecordphp(Loginsuccess.this,name,cls,bch);
@@ -341,7 +436,7 @@ public class Loginsuccess extends Activity {
                     Toast.LENGTH_SHORT).show();
         }
 
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, employeeList,
+        simpleAdapter = new SimpleAdapter(this, employeeList,
                 R.layout.listviewsamp,
                 new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
         listView.setAdapter(simpleAdapter);
