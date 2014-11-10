@@ -51,21 +51,17 @@ public class UpdateEntry extends ActionBarActivity {
          oldname = b.getString("name");
         name.setText(oldname);
          oldclass = b.getString("class");
-        ArrayAdapter aaclas = (ArrayAdapter) classs.getAdapter();
-        int claspos = aaclas.getPosition(oldclass);
-        classs.setSelection(claspos);
+        classs.setSelection(getIndex(classs, oldclass));
         oldbatch = b.getString("batch");
         batch.setText(oldbatch);
         oldmob = b.getString("mob");
         mob.setText(oldmob);
-         oldaddr = b.getString("address");
+        oldaddr = b.getString("address");
         addr.setText(oldaddr);
         oldlast = b.getString("lastedon");
         lastdon.setText(oldlast);
         oldbg = b.getString("bg");
-        ArrayAdapter aabg = (ArrayAdapter) bg.getAdapter();
-        int bgpos = aabg.getPosition(oldbg);
-        bg.setSelection(bgpos);
+        bg.setSelection(getIndex(bg, oldbg));
         classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
         groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
@@ -116,6 +112,20 @@ public class UpdateEntry extends ActionBarActivity {
 
             }
         });
+    }
+
+    private int getIndex(Spinner spin, String s) {
+
+        int index = 0;
+
+        for (int i=0;i<spin.getCount();i++){
+            if (spin.getItemAtPosition(i).toString().equalsIgnoreCase(s)){
+                index = i;
+            //    i=spin.getCount();//will stop the loop, kind of break, by making condition false
+                break;
+            }
+        }
+        return index;
     }
 
     public void submitdata(){
