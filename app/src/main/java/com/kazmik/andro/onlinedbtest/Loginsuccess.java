@@ -1,9 +1,12 @@
 package com.kazmik.andro.onlinedbtest;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -66,7 +69,7 @@ public class Loginsuccess extends Activity {
         accessWebService();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final View selectedView = view ;
                 //String name = listView.getItemAtPosition(position).toString();
                 TextView txt  = (TextView) view.findViewById(R.id.tvlistviewname);
@@ -122,6 +125,35 @@ public class Loginsuccess extends Activity {
                     @Override
                     public void onClick(View v) {
                         diag.dismiss();
+                    }
+                });
+                Button del = (Button) findViewById(R.id.bdiagddel);
+                del.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        final AlertDialog.Builder alert = new AlertDialog.Builder(Loginsuccess.this);
+                        alert.setTitle("Confirm Delete");
+                        alert
+                                .setMessage("Do you want to DELETE these entry?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // if this button is clicked, close
+                                        // current activity
+                                        dialog.cancel();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // if this button is clicked, just close
+                                        // the dialog box and do nothing
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alertDialog = alert.create();
+
+                        // show it
+                        alertDialog.show();
                     }
                 });
                 Button bupdate = (Button)diag.findViewById(R.id.bdiagdupdate);

@@ -91,11 +91,9 @@
         android:layout_height="wrap_content"
         android:text="OK"
         android:id="@+id/bdiagdok"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="19dp"
         android:layout_below="@+id/tvdlastdon"
-        android:layout_alignLeft="@+id/tvdclass"
-        android:layout_alignStart="@+id/tvdclass"
-        android:layout_marginLeft="15dp" />
+        android:layout_toRightOf="@+id/bdiagdupdate" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -137,6 +135,15 @@
         android:text="Update"
         android:id="@+id/bdiagdupdate"
         android:layout_alignTop="@+id/bdiagdok"
-        android:layout_toLeftOf="@+id/bdiagdok" />
+        android:layout_alignLeft="@+id/tvdlastdon"
+        android:layout_alignStart="@+id/tvdlastdon" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/bdiagddel"
+        android:layout_alignTop="@+id/bdiagdok"
+        android:layout_toRightOf="@+id/bdiagdok" />
 
 </RelativeLayout>
