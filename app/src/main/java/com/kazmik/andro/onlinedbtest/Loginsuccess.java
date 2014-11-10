@@ -103,6 +103,13 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterclass  = spfilterclass.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterclass,Toast.LENGTH_SHORT).show();
+                dialog = new ProgressDialog(Loginsuccess.this);
+                dialog.setTitle("Fetching Data");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setMessage("Repopulating List");
+                dialog.show();
+                accessWebService();
             }
 
             @Override
@@ -121,6 +128,13 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterbg = spfilterbg.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterbg,Toast.LENGTH_SHORT).show();
+                dialog = new ProgressDialog(Loginsuccess.this);
+                dialog.setTitle("Fetching Data");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.setMessage("Repopulating List");
+                dialog.show();
+                accessWebService();
             }
 
             @Override
@@ -546,7 +560,6 @@ public class Loginsuccess extends Activity {
             cbclass = (CheckBox)dag.findViewById(R.id.cbclass);
             cbbatch = (CheckBox)dag.findViewById(R.id.cbbatch);
             Button bdagok = (Button)dag.findViewById(R.id.bdiagfilter);
-
             bdagok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
