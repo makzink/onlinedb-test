@@ -184,18 +184,19 @@ public class Loginsuccess extends Activity {
 
     private void deleterecord(String name, String cls, String bch) {
         deleterecordphp del = new deleterecordphp(Loginsuccess.this,name,cls,bch);
+        del.execute();
     }
     private class deleterecordphp extends AsyncTask<String, Void, String> {
 
         ProgressDialog progress;
            Context c;
-        String name,clas,batch;
+        String name,clasd,batchd;
         public deleterecordphp(Loginsuccess loginsuccess, String name, String cls, String bch) {
             this.c = loginsuccess;
             progress= new ProgressDialog(this.c);
             this.name = name;
-            this.clas = cls;
-            this.batch = bch;
+            clasd = cls;
+            batchd = bch;
 
         }
         protected void onPreExecute(){
@@ -212,11 +213,12 @@ public class Loginsuccess extends Activity {
             try {
                 String link = "http://kazmikkhan.comli.com/phpupdatedetails.php";
                 String data  = URLEncoder.encode("name", "UTF-8")
-                        + "=" + URLEncoder.encode(this.name, "UTF-8");
+                        + "=" + URLEncoder.encode(name, "UTF-8");
                 data += "&" + URLEncoder.encode("clas", "UTF-8")
-                        + "=" + URLEncoder.encode(this.clas, "UTF-8");
+                        + "=" + URLEncoder.encode(clasd, "UTF-8");
                 data += "&" + URLEncoder.encode("batch", "UTF-8")
-                        + "=" + URLEncoder.encode(this.batch, "UTF-8");
+                        + "=" + URLEncoder.encode(batchd, "UTF-8");
+                Toast.makeText(Loginsuccess.this,name+"\n"+clasd+"\n"+batchd,Toast.LENGTH_SHORT).show();
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
