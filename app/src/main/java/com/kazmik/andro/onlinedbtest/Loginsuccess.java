@@ -66,7 +66,7 @@ public class Loginsuccess extends Activity {
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     TextView tvbgfilter,tvclassfilter,tvfilterbatch;
-    ProgressDialog dialog,dialogbg,dialogclass;
+    ProgressDialog dialog,dialogbg,dialogclass,dialogboth;
     Spinner spfilterbg,spfilterclass;
     EditText etfilterbatch;
     LinearLayout llfilterlist;
@@ -84,7 +84,7 @@ public class Loginsuccess extends Activity {
         tvclassfilter = (TextView)findViewById(R.id.tvfilterclass);
         spfilterbg = (Spinner)findViewById(R.id.spinfiltbg);
         spfilterclass = (Spinner)findViewById(R.id.spinfiltclass);
-        String[] classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
+        String[] classes = new String[]{"NONE","CSE", "CE", "EEE", "ECE", "ME", "ICE"};
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, classes);
         adapter_state
@@ -99,15 +99,20 @@ public class Loginsuccess extends Activity {
                 {
                     flagcls=1;
                 }
-                else {
-                    dialogclass = new ProgressDialog(Loginsuccess.this);
-                    dialogclass.setTitle("Filtering Data By Class : " + spfilterclass.getSelectedItem().toString());
-                    dialogclass.setCancelable(false);
-                    dialogclass.setCanceledOnTouchOutside(false);
-                    dialogclass.setMessage("Repopulating List");
-                    dialogclass.show();
+                else if(spfilterclass.getSelectedItem().toString().equals("NONE"))
+                {   if(!spfilterbg.getSelectedItem().toString().equals("NONE"))
+                        accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
+                    else
+                    accessWebService(Loginsuccess.this);
+                }
+                else if(spfilterbg.getSelectedItem().toString().equals("NONE"))
+                {
                     accessWebServicefilterclass(spfilterclass.getSelectedItem().toString());
                 }
+                else {
+                    accessWebServicebyboth(spfilterbg.getSelectedItem().toString(), spfilterclass.getSelectedItem().toString());
+                }
+
             }
 
             @Override
@@ -115,7 +120,7 @@ public class Loginsuccess extends Activity {
 
             }
         });
-        groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
+        groups = new String[]  {"NONE","A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
         ArrayAdapter<String> adapter_state_bg = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, groups);
         adapter_state_bg
@@ -130,16 +135,23 @@ public class Loginsuccess extends Activity {
                 {
                     flagbg=1;
                 }
-                else {
-                    dialogbg = new ProgressDialog(Loginsuccess.this);
-                    dialogbg.setTitle("Filtering Data By Blood Group : " + spfilterbg.getSelectedItem().toString());
-                    dialogbg.setCancelable(false);
-                    dialogbg.setCanceledOnTouchOutside(false);
-                    dialogbg.setMessage("Repopulating List");
-                    dialogbg.show();
-                    accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
+                else if(spfilterbg.getSelectedItem().toString().equals("NONE"))
+                {   if(!spfilterclass.getSelectedItem().toString().equals("NONE"))
+                    accessWebServicefilterclass(spfilterclass.getSelectedItem().toString());
+                    else
+                    accessWebService(Loginsuccess.this);
                 }
-            }
+
+                else if(spfilterclass.getSelectedItem().toString().equals("NONE"))
+                    {
+                        accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
+                    }
+                else
+                    accessWebServicebyboth(spfilterbg.getSelectedItem().toString(), spfilterclass.getSelectedItem().toString());
+
+
+                }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -257,7 +269,113 @@ public class Loginsuccess extends Activity {
         });
     }
 
+    private void accessWebServicebyboth(String bgfilt, String clsfilt) {
+        dialogbg = new ProgressDialog(Loginsuccess.this);
+        dialogbg.setTitle("Filtering Data By Blood Group : " + bgfilt+ " and Class : " + clsfilt );
+        dialogbg.setCancelable(false);
+        dialogbg.setCanceledOnTouchOutside(false);
+        dialogbg.setMessage("Repopulating List");
+        dialogbg.show();
+        JsonReadTaskfilterbyboth task = new JsonReadTaskfilterbyboth(bgfilt,clsfilt);
+        task.execute(new String[] { url });
+    }
+    private class JsonReadTaskfilterbyboth extends AsyncTask<String, Void, String> {
+        String bg,cls;
+        public JsonReadTaskfilterbyboth(String bgfilt, String s) {
+            bg=bgfilt;
+            cls=s;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(params[0]);
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                jsonResult = inputStreamToString(
+                        response.getEntity().getContent()).toString();
+            }
+
+            catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private StringBuilder inputStreamToString(InputStream is) {
+            String rLine = "";
+            StringBuilder answer = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+
+            try {
+                while ((rLine = rd.readLine()) != null) {
+                    answer.append(rLine);
+                }
+            }
+
+            catch (IOException e) {
+                // e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Error..." + e.toString(), Toast.LENGTH_LONG).show();
+            }
+            return answer;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ListDrwaerfilterbyboth(bg,cls);
+        }
+
+    }// end async task
+
+    // build hash set for list view
+    public void ListDrwaerfilterbyboth(String bg, String cls) {
+        List<Map<String, String>> employeeList = new ArrayList<Map<String, String>>();
+
+        try {
+            jsonResponse = new JSONObject(jsonResult);
+            jsonMainNode = jsonResponse.optJSONArray("user_info");
+
+            for (int i = 0; i < jsonMainNode.length(); i++) {
+                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String name = jsonChildNode.optString("name");
+                String blood = jsonChildNode.optString("bg");
+                String fclas = jsonChildNode.optString("class");
+                String outPut=null;
+                if(blood.equals(bg)&&fclas.equals(cls))
+                    outPut=name;
+                if(outPut!=null)
+                    employeeList.add(createEmployeefilterbyboth("usernames", outPut));
+            }
+        } catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        simpleAdapter = new SimpleAdapter(this, employeeList,
+                R.layout.listviewsamp,
+                new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new ModeCallback());
+        listView.setAdapter(simpleAdapter);
+        dialogbg.dismiss();
+    }
+
+    private HashMap<String, String> createEmployeefilterbyboth(String name, String number) {
+        HashMap<String, String> employeeNameNo = new HashMap<String, String>();
+        employeeNameNo.put(name, number);
+        return employeeNameNo;
+    }
+
     private void accessWebServicefilterbg(String s) {
+        dialogbg = new ProgressDialog(Loginsuccess.this);
+        dialogbg.setTitle("Filtering Data By Blood Group : " + spfilterbg.getSelectedItem().toString());
+        dialogbg.setCancelable(false);
+        dialogbg.setCanceledOnTouchOutside(false);
+        dialogbg.setMessage("Repopulating List");
+        dialogbg.show();
         JsonReadTaskfilterbg task = new JsonReadTaskfilterbg(s);
         // passes values for the urls string array
         task.execute(new String[] { url });
@@ -357,6 +475,12 @@ public class Loginsuccess extends Activity {
     //////
 
     private void accessWebServicefilterclass(String s) {
+        dialogclass = new ProgressDialog(Loginsuccess.this);
+        dialogclass.setTitle("Filtering Data By Class : " + spfilterclass.getSelectedItem().toString());
+        dialogclass.setCancelable(false);
+        dialogclass.setCanceledOnTouchOutside(false);
+        dialogclass.setMessage("Repopulating List");
+        dialogclass.show();
         JsonReadTaskfilterclass task = new JsonReadTaskfilterclass(s);
         // passes values for the urls string array
         task.execute(new String[] { url });
@@ -774,6 +898,7 @@ public class Loginsuccess extends Activity {
                     {
                         tvbgfilter.setVisibility(View.GONE);
                         spfilterbg.setVisibility(View.GONE);
+                        spfilterbg.setSelection(getIndex(spfilterbg,"NONE"));
 
                     }
                     if(cbclass.isChecked())
@@ -787,6 +912,7 @@ public class Loginsuccess extends Activity {
                     {
                         tvclassfilter.setVisibility(View.GONE);
                         spfilterclass.setVisibility(View.GONE);
+                        spfilterclass.setSelection(getIndex(spfilterclass,"NONE"));
                     }
                     if(cbbatch.isChecked())
                     {
@@ -810,7 +936,19 @@ public class Loginsuccess extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+    private int getIndex(Spinner spin, String s) {
 
+        int index = 0;
+
+        for (int i=0;i<spin.getCount();i++){
+            if (spin.getItemAtPosition(i).toString().equalsIgnoreCase(s)){
+                index = i;
+                //    i=spin.getCount();//will stop the loop, kind of break, by making condition false
+                break;
+            }
+        }
+        return index;
+    }
 
 
 }
