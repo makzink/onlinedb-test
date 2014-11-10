@@ -50,6 +50,8 @@ public class Loginsuccess extends Activity {
     private String jsonResult;
     JSONArray jsonMainNode;
     JSONObject jsonResponse;
+    JSONObject jsonChildNode = null,node = null;
+
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     ProgressDialog dialog;
@@ -73,7 +75,7 @@ public class Loginsuccess extends Activity {
                 final View selectedView = view ;
                 //String name = listView.getItemAtPosition(position).toString();
                 TextView txt  = (TextView) view.findViewById(R.id.tvlistviewname);
-                String name = txt.getText().toString();
+                final String name = txt.getText().toString();
 
                 SimpleDateFormat postFormater = new SimpleDateFormat("MMM dd");
                 final Dialog diag = new Dialog(Loginsuccess.this);
@@ -89,7 +91,6 @@ public class Loginsuccess extends Activity {
                 TextView hos= (TextView)diag.findViewById(R.id.tvdiaghostel);
                 TextView lastdon =(TextView)diag.findViewById(R.id.tvdiaglastdon);
                 try {
-                    JSONObject jsonChildNode = null;
 
                 for (int i = 0; i < jsonMainNode.length(); i++) {
 
@@ -98,6 +99,7 @@ public class Loginsuccess extends Activity {
 
                     if(name.equals(jsonChildNode.optString("name")))
                     {
+                        node = jsonChildNode;
                         namea.setText(name);
                         classa.setText(jsonChildNode.optString("class"));
                         bg.setText(jsonChildNode.optString("bg"));
@@ -127,7 +129,7 @@ public class Loginsuccess extends Activity {
                         diag.dismiss();
                     }
                 });
-                Button del = (Button) findViewById(R.id.bdiagddel);
+                Button del = (Button) diag.findViewById(R.id.bdiagddel);
                 del.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -140,6 +142,8 @@ public class Loginsuccess extends Activity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // if this button is clicked, close
                                         // current activity
+                                        diag.dismiss();
+                                        Toast.makeText(Loginsuccess.this,name+"\n"+node.optString("class")+"\n"+node.optString("batchfrom"),Toast.LENGTH_SHORT).show();
                                         dialog.cancel();
                                     }
                                 })
