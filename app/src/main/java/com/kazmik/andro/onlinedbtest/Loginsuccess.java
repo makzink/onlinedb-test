@@ -55,6 +55,7 @@ public class Loginsuccess extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
+        final Bundle b = new Bundle();
         listView = (ListView) findViewById(R.id.listView1);
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching Data");
@@ -101,7 +102,13 @@ public class Loginsuccess extends Activity {
                         mob.setText(jsonChildNode.optString("mob"));
                         hos.setText(jsonChildNode.optString("address"));
                         lastdon.setText(jsonChildNode.optString("lastdon"));
-
+                        b.putString("name",name);
+                        b.putString("class",jsonChildNode.optString("class"));
+                        b.putString("batch",jsonChildNode.optString("batchfrom"));
+                        b.putString("mob",jsonChildNode.optString("mob"));
+                        b.putString("address",jsonChildNode.optString("address"));
+                        b.putString("lastdon",jsonChildNode.optString("lastdon"));
+                        b.putString("bg",jsonChildNode.optString("bg"));
                     }
 
                 }
@@ -115,6 +122,15 @@ public class Loginsuccess extends Activity {
                     @Override
                     public void onClick(View v) {
                         diag.dismiss();
+                    }
+                });
+                Button bupdate = (Button)diag.findViewById(R.id.bdiagdupdate);
+                bupdate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent k = new Intent(Loginsuccess.this,UpdateEntry.class);
+                        k.putExtras(b);
+                        startActivity(k);
                     }
                 });
                 diag.show();

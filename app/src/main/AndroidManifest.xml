@@ -27,6 +27,10 @@
             android:name=".AddNewEntry"
             android:label="@string/title_activity_add_new_entry" >
         </activity>
+        <activity
+            android:name=".UpdateEntry"
+            android:label="@string/title_activity_update_entry" >
+        </activity>
     </application>
 
 </manifest>

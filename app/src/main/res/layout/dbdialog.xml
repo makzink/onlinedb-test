@@ -131,4 +131,12 @@
         android:layout_below="@+id/tvdiaghostel"
         android:layout_toRightOf="@+id/tvdhostel" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update"
+        android:id="@+id/bdiagdupdate"
+        android:layout_alignTop="@+id/bdiagdok"
+        android:layout_toLeftOf="@+id/bdiagdok" />
+
 </RelativeLayout>

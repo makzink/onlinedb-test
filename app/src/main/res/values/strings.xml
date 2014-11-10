@@ -17,5 +17,6 @@
     <string name="Choose">Choose Method</string>
     <string name="title_activity_loginsuccess">Login success</string>
     <string name="title_activity_add_new_entry">Add New Entry</string>
+    <string name="title_activity_update_entry">Update Entry</string>
 
 </resources>
