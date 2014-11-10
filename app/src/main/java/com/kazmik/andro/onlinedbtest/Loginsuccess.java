@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +17,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -143,7 +148,9 @@ public class Loginsuccess extends Activity {
                                         // if this button is clicked, close
                                         // current activity
                                         diag.dismiss();
-                                        Toast.makeText(Loginsuccess.this,name+"\n"+node.optString("class")+"\n"+node.optString("batchfrom"),Toast.LENGTH_SHORT).show();
+                                        String cls = node.optString("class");
+                                        String bch = node.optString("bacthfrom");
+                                        deleterecord(name, cls, bch);
                                         dialog.cancel();
                                     }
                                 })
@@ -173,6 +180,87 @@ public class Loginsuccess extends Activity {
 
             }
         });
+    }
+
+    private void deleterecord(String name, String cls, String bch) {
+        deleterecordphp del = new deleterecordphp(Loginsuccess.this,name,cls,bch);
+    }
+    private class deleterecordphp extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progress;
+           Context c;
+        String name,clas,batch;
+        public deleterecordphp(Loginsuccess loginsuccess, String name, String cls, String bch) {
+            this.c = loginsuccess;
+            progress= new ProgressDialog(this.c);
+            this.name = name;
+            this.clas = cls;
+            this.batch = bch;
+
+        }
+        protected void onPreExecute(){
+
+            progress.setTitle("Deleting Record");
+            progress.setCanceledOnTouchOutside(false);
+            progress.setCancelable(false);
+            progress.setMessage("Updating Database At Server");
+            progress.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String link = "http://kazmikkhan.comli.com/phpupdatedetails.php";
+                String data  = URLEncoder.encode("name", "UTF-8")
+                        + "=" + URLEncoder.encode(this.name, "UTF-8");
+                data += "&" + URLEncoder.encode("clas", "UTF-8")
+                        + "=" + URLEncoder.encode(this.clas, "UTF-8");
+                data += "&" + URLEncoder.encode("batch", "UTF-8")
+                        + "=" + URLEncoder.encode(this.batch, "UTF-8");
+                URL url = new URL(link);
+                URLConnection conn = url.openConnection();
+                conn.setDoOutput(true);
+                OutputStreamWriter wr = new OutputStreamWriter
+                        (conn.getOutputStream());
+                wr.write( data );
+                wr.flush();
+                BufferedReader reader = new BufferedReader
+                        (new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                // Read Server Response
+                while((line = reader.readLine()) != null)
+                {
+                    sb.append(line);
+                    break;
+                }
+
+                return sb.toString();
+
+            }
+            catch (Exception e) {
+                return new String("Exception: " + e.getMessage());
+            }
+
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            if(s.equals("success"))
+            {
+                Intent k = new Intent(Loginsuccess.this,Loginsuccess.class);
+                startActivity(k);
+                Loginsuccess.this.finish();
+                Toast.makeText(Loginsuccess.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }
+            else
+            {
+                Intent k = new Intent(Loginsuccess.this,Loginsuccess.class);
+                startActivity(k);
+                Toast.makeText(Loginsuccess.this,"Record Not Deleted",Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }
+        }
     }
 
     public void accessWebService() {
