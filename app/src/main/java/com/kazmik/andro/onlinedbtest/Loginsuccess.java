@@ -149,7 +149,8 @@ public class Loginsuccess extends Activity {
                                         // current activity
                                         diag.dismiss();
                                         String cls = node.optString("class");
-                                        String bch = node.optString("bacthfrom");
+                                        String bch = node.optString("batchfrom");
+
                                         deleterecord(name, cls, bch);
                                         dialog.cancel();
                                     }
@@ -184,6 +185,7 @@ public class Loginsuccess extends Activity {
 
     private void deleterecord(String name, String cls, String bch) {
         deleterecordphp del = new deleterecordphp(Loginsuccess.this,name,cls,bch);
+
         del.execute();
     }
     private class deleterecordphp extends AsyncTask<String, Void, String> {
@@ -197,6 +199,7 @@ public class Loginsuccess extends Activity {
             this.name = name;
             clasd = cls;
             batchd = bch;
+            Toast.makeText(Loginsuccess.this,name+"\n"+clasd+"\n"+batchd,Toast.LENGTH_SHORT).show();
 
         }
         protected void onPreExecute(){
@@ -211,14 +214,14 @@ public class Loginsuccess extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://kazmikkhan.comli.com/phpupdatedetails.php";
+                String link = "http://kazmikkhan.comli.com/phpdeletedetails.php";
                 String data  = URLEncoder.encode("name", "UTF-8")
                         + "=" + URLEncoder.encode(name, "UTF-8");
                 data += "&" + URLEncoder.encode("clas", "UTF-8")
                         + "=" + URLEncoder.encode(clasd, "UTF-8");
                 data += "&" + URLEncoder.encode("batch", "UTF-8")
                         + "=" + URLEncoder.encode(batchd, "UTF-8");
-                Toast.makeText(Loginsuccess.this,name+"\n"+clasd+"\n"+batchd,Toast.LENGTH_SHORT).show();
+
                 URL url = new URL(link);
                 URLConnection conn = url.openConnection();
                 conn.setDoOutput(true);
