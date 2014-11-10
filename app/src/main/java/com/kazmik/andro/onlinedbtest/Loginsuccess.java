@@ -47,12 +47,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,7 +64,9 @@ import android.widget.Toast;
 
 public class Loginsuccess extends Activity {
 
-    private String jsonResult,names,filterbg;
+    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT);
+    private String jsonResult,names,filterbg,filterclass,filterbatch;
     JSONArray jsonMainNode;
     String[] groups;
     JSONObject jsonResponse;
@@ -68,17 +74,42 @@ public class Loginsuccess extends Activity {
     SimpleAdapter simpleAdapter;
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
-    TextView tvbgfilter;
+    TextView tvbgfilter,tvclassfilter,tvfilterbatch;
     ProgressDialog dialog;
-    Spinner spfilterbg;
+    Spinner spfilterbg,spfilterclass;
+    EditText etfilterbatch;
+    LinearLayout llfilterlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
         final Bundle b = new Bundle();
+        llfilterlist = (LinearLayout)findViewById(R.id.llfilterlist);
         listView = (ListView) findViewById(R.id.listView1);
+        etfilterbatch = (EditText)findViewById(R.id.etfilterbatch);
+        tvfilterbatch = (TextView)findViewById(R.id.tvfilterbatch);
         tvbgfilter = (TextView)findViewById(R.id.tvfilterbg);
+        tvclassfilter = (TextView)findViewById(R.id.tvfilterclass);
         spfilterbg = (Spinner)findViewById(R.id.spinfiltbg);
+        spfilterclass = (Spinner)findViewById(R.id.spinfiltclass);
+        String[] classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
+        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, classes);
+        adapter_state
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spfilterclass.setAdapter(adapter_state);
+        spfilterclass.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterclass  = spfilterclass.getSelectedItem().toString();
+                Toast.makeText(Loginsuccess.this,filterclass,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
         ArrayAdapter<String> adapter_state_bg = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, groups);
@@ -503,31 +534,65 @@ public class Loginsuccess extends Activity {
         }
         else if(id==R.id.filter)
         {
-            Dialog dag = new Dialog(Loginsuccess.this);
+            final ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) listView
+                    .getLayoutParams();
+            final Dialog dag = new Dialog(Loginsuccess.this);
             dag.setCancelable(false);
             dag.setCanceledOnTouchOutside(false);
             dag.setContentView(R.layout.fileterby);
             dag.setTitle("Select filters");
-            CheckBox cbbg,cbclass,cbbatch;
+            final CheckBox cbbg,cbclass,cbbatch;
             cbbg = (CheckBox)dag.findViewById(R.id.cbbg);
             cbclass = (CheckBox)dag.findViewById(R.id.cbclass);
             cbbatch = (CheckBox)dag.findViewById(R.id.cbbatch);
-            cbbg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            Button bdagok = (Button)dag.findViewById(R.id.bdiagfilter);
+
+            bdagok.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked)
+                public void onClick(View v) {
+                    if(cbbg.isChecked())
                     {
                         tvbgfilter.setVisibility(View.VISIBLE);
                         spfilterbg.setVisibility(View.VISIBLE);
+                        p.addRule(RelativeLayout.BELOW, R.id.spinfiltbg);
+                        llfilterlist.setLayoutParams(p);
+
                     }
                     else
                     {
                         tvbgfilter.setVisibility(View.GONE);
                         spfilterbg.setVisibility(View.GONE);
+
                     }
+                    if(cbclass.isChecked())
+                    {
+                        tvclassfilter.setVisibility(View.VISIBLE);
+                        spfilterclass.setVisibility(View.VISIBLE);
+                        p.addRule(RelativeLayout.BELOW, R.id.spinfiltclass);
+                        llfilterlist.setLayoutParams(p);
+                    }
+                    else
+                    {
+                        tvclassfilter.setVisibility(View.GONE);
+                        spfilterclass.setVisibility(View.GONE);
+                    }
+                    if(cbbatch.isChecked())
+                    {
+                        tvfilterbatch.setVisibility(View.VISIBLE);
+                        etfilterbatch.setVisibility(View.VISIBLE);
+                        p.addRule(RelativeLayout.BELOW, R.id.etfilterbatch);
+                        llfilterlist.setLayoutParams(p);
+                    }
+                    else
+                    {
+                        tvfilterbatch.setVisibility(View.GONE);
+                        etfilterbatch.setVisibility(View.GONE);
+                    }
+                    dag.dismiss();
                 }
             });
-            Toast.makeText(Loginsuccess.this,"Filter activated",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Loginsuccess.this,"Filter activated",Toast.LENGTH_SHORT).show();
+            dag.show();
         }
         return super.onOptionsItemSelected(item);
     }
