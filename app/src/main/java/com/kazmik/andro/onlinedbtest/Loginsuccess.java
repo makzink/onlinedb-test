@@ -2,21 +2,17 @@ package com.kazmik.andro.onlinedbtest;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import com.kazmik.andro.onlinedbtest.R;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,10 +21,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,16 +37,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -79,6 +70,7 @@ public class Loginsuccess extends Activity {
     Spinner spfilterbg,spfilterclass;
     EditText etfilterbatch;
     LinearLayout llfilterlist;
+    int flagbg=0,flagcls=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,13 +95,19 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterclass  = spfilterclass.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterclass,Toast.LENGTH_SHORT).show();
-                dialogclass = new ProgressDialog(Loginsuccess.this);
-                dialogclass.setTitle("Filtering Data By Class : "+spfilterclass.getSelectedItem().toString());
-                dialogclass.setCancelable(false);
-                dialogclass.setCanceledOnTouchOutside(false);
-                dialogclass.setMessage("Repopulating List");
-                dialogclass.show();
-                accessWebServicefilterclass(spfilterclass.getSelectedItem().toString());
+                if(flagcls==0)
+                {
+                    flagcls=1;
+                }
+                else {
+                    dialogclass = new ProgressDialog(Loginsuccess.this);
+                    dialogclass.setTitle("Filtering Data By Class : " + spfilterclass.getSelectedItem().toString());
+                    dialogclass.setCancelable(false);
+                    dialogclass.setCanceledOnTouchOutside(false);
+                    dialogclass.setMessage("Repopulating List");
+                    dialogclass.show();
+                    accessWebServicefilterclass(spfilterclass.getSelectedItem().toString());
+                }
             }
 
             @Override
@@ -128,13 +126,19 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterbg = spfilterbg.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterbg,Toast.LENGTH_SHORT).show();
-                dialogbg = new ProgressDialog(Loginsuccess.this);
-                dialogbg.setTitle("Filtering Data By Blood Group : "+spfilterbg.getSelectedItem().toString());
-                dialogbg.setCancelable(false);
-                dialogbg.setCanceledOnTouchOutside(false);
-                dialogbg.setMessage("Repopulating List");
-                dialogbg.show();
-                accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
+                if(flagbg==0)
+                {
+                    flagbg=1;
+                }
+                else {
+                    dialogbg = new ProgressDialog(Loginsuccess.this);
+                    dialogbg.setTitle("Filtering Data By Blood Group : " + spfilterbg.getSelectedItem().toString());
+                    dialogbg.setCancelable(false);
+                    dialogbg.setCanceledOnTouchOutside(false);
+                    dialogbg.setMessage("Repopulating List");
+                    dialogbg.show();
+                    accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
+                }
             }
 
             @Override
@@ -142,13 +146,8 @@ public class Loginsuccess extends Activity {
 
             }
         });
-        dialog = new ProgressDialog(this);
-        dialog.setTitle("Fetching Data");
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setMessage("Populating List");
-        dialog.show();
-        accessWebService();
+
+        accessWebService(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
@@ -633,7 +632,13 @@ public class Loginsuccess extends Activity {
         }
     }
 
-    public void accessWebService() {
+    public void accessWebService(Loginsuccess loginsuccess) {
+        dialog = new ProgressDialog(loginsuccess);
+        dialog.setTitle("Fetching Data");
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setMessage("Populating List");
+        dialog.show();
         JsonReadTask task = new JsonReadTask();
         // passes values for the urls string array
         task.execute(new String[] { url });
@@ -795,6 +800,8 @@ public class Loginsuccess extends Activity {
                         tvfilterbatch.setVisibility(View.GONE);
                         etfilterbatch.setVisibility(View.GONE);
                     }
+                    if(!cbbatch.isChecked()&&!cbbg.isChecked()&&!cbclass.isChecked())
+                        accessWebService(Loginsuccess.this);
                     dag.dismiss();
                 }
             });

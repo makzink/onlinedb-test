@@ -4,7 +4,7 @@
     tools:context="com.kazmik.andro.onlinedbtest.Loginsuccess" >
     <item android:id="@+id/filter"
         android:title="delete"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/filter"
         android:showAsAction="always" />
     <item android:id="@+id/action_newentry"
         android:title="Add New Entry"
