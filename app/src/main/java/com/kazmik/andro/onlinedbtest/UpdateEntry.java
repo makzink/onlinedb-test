@@ -51,17 +51,18 @@ public class UpdateEntry extends ActionBarActivity {
          oldname = b.getString("name");
         name.setText(oldname);
          oldclass = b.getString("class");
-        classs.setSelection(getIndex(classs, oldclass));
+
         oldbatch = b.getString("batch");
         batch.setText(oldbatch);
         oldmob = b.getString("mob");
         mob.setText(oldmob);
         oldaddr = b.getString("address");
         addr.setText(oldaddr);
-        oldlast = b.getString("lastedon");
+        oldlast = b.getString("lastdon");
         lastdon.setText(oldlast);
         oldbg = b.getString("bg");
-        bg.setSelection(getIndex(bg, oldbg));
+
+
         classes = new String[]{"CSE", "CE", "EEE", "ECE", "ME", "ICE"};
         groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
         ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,
@@ -74,6 +75,10 @@ public class UpdateEntry extends ActionBarActivity {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         classs.setAdapter(adapter_state);
         bg.setAdapter(adapter_state_bg);
+        classs.setSelection(getIndex(classs, oldclass));
+
+        bg.setSelection(getIndex(bg,oldbg));
+        
         bg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
