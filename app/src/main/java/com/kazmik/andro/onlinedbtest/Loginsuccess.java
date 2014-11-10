@@ -75,7 +75,7 @@ public class Loginsuccess extends Activity {
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
     TextView tvbgfilter,tvclassfilter,tvfilterbatch;
-    ProgressDialog dialog;
+    ProgressDialog dialog,dialogbg,dialogclass;
     Spinner spfilterbg,spfilterclass;
     EditText etfilterbatch;
     LinearLayout llfilterlist;
@@ -103,13 +103,13 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterclass  = spfilterclass.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterclass,Toast.LENGTH_SHORT).show();
-                dialog = new ProgressDialog(Loginsuccess.this);
-                dialog.setTitle("Fetching Data");
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.setMessage("Repopulating List");
-                dialog.show();
-                accessWebService();
+                dialogclass = new ProgressDialog(Loginsuccess.this);
+                dialogclass.setTitle("Filtering Data By Class : "+spfilterclass.getSelectedItem().toString());
+                dialogclass.setCancelable(false);
+                dialogclass.setCanceledOnTouchOutside(false);
+                dialogclass.setMessage("Repopulating List");
+                dialogclass.show();
+                accessWebServicefilterclass(spfilterclass.getSelectedItem().toString());
             }
 
             @Override
@@ -128,13 +128,13 @@ public class Loginsuccess extends Activity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 filterbg = spfilterbg.getSelectedItem().toString();
                 Toast.makeText(Loginsuccess.this,filterbg,Toast.LENGTH_SHORT).show();
-                dialog = new ProgressDialog(Loginsuccess.this);
-                dialog.setTitle("Fetching Data");
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.setMessage("Repopulating List");
-                dialog.show();
-                accessWebService();
+                dialogbg = new ProgressDialog(Loginsuccess.this);
+                dialogbg.setTitle("Filtering Data By Blood Group : "+spfilterbg.getSelectedItem().toString());
+                dialogbg.setCancelable(false);
+                dialogbg.setCanceledOnTouchOutside(false);
+                dialogbg.setMessage("Repopulating List");
+                dialogbg.show();
+                accessWebServicefilterbg(spfilterbg.getSelectedItem().toString());
             }
 
             @Override
@@ -256,6 +256,201 @@ public class Loginsuccess extends Activity {
 
             }
         });
+    }
+
+    private void accessWebServicefilterbg(String s) {
+        JsonReadTaskfilterbg task = new JsonReadTaskfilterbg(s);
+        // passes values for the urls string array
+        task.execute(new String[] { url });
+        //dialogbg.dismiss();
+    }
+    /////
+
+    private class JsonReadTaskfilterbg extends AsyncTask<String, Void, String> {
+        String bg;
+        public JsonReadTaskfilterbg(String s) {
+            bg=s;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(params[0]);
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                jsonResult = inputStreamToString(
+                        response.getEntity().getContent()).toString();
+            }
+
+            catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private StringBuilder inputStreamToString(InputStream is) {
+            String rLine = "";
+            StringBuilder answer = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+
+            try {
+                while ((rLine = rd.readLine()) != null) {
+                    answer.append(rLine);
+                }
+            }
+
+            catch (IOException e) {
+                // e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Error..." + e.toString(), Toast.LENGTH_LONG).show();
+            }
+            return answer;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ListDrwaerfilterbg(bg);
+        }
+
+    }// end async task
+
+    // build hash set for list view
+    public void ListDrwaerfilterbg(String bg) {
+        List<Map<String, String>> employeeList = new ArrayList<Map<String, String>>();
+
+        try {
+            jsonResponse = new JSONObject(jsonResult);
+            jsonMainNode = jsonResponse.optJSONArray("user_info");
+
+            for (int i = 0; i < jsonMainNode.length(); i++) {
+                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String name = jsonChildNode.optString("name");
+                String blood = jsonChildNode.optString("bg");
+
+                String outPut=null;
+                if(blood.equals(bg))
+                outPut=name;
+                if(outPut!=null)
+                employeeList.add(createEmployeefilterbg("usernames", outPut));
+            }
+        } catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        simpleAdapter = new SimpleAdapter(this, employeeList,
+                R.layout.listviewsamp,
+                new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new ModeCallback());
+        listView.setAdapter(simpleAdapter);
+        dialogbg.dismiss();
+    }
+
+    private HashMap<String, String> createEmployeefilterbg(String name, String number) {
+        HashMap<String, String> employeeNameNo = new HashMap<String, String>();
+        employeeNameNo.put(name, number);
+        return employeeNameNo;
+    }
+
+    //////
+
+    private void accessWebServicefilterclass(String s) {
+        JsonReadTaskfilterclass task = new JsonReadTaskfilterclass(s);
+        // passes values for the urls string array
+        task.execute(new String[] { url });
+        //dialogclass.dismiss();
+    }
+
+    ////
+    private class JsonReadTaskfilterclass extends AsyncTask<String, Void, String> {
+        String cls;
+        public JsonReadTaskfilterclass(String s) {
+            cls=s;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(params[0]);
+            try {
+                HttpResponse response = httpclient.execute(httppost);
+                jsonResult = inputStreamToString(
+                        response.getEntity().getContent()).toString();
+            }
+
+            catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private StringBuilder inputStreamToString(InputStream is) {
+            String rLine = "";
+            StringBuilder answer = new StringBuilder();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+
+            try {
+                while ((rLine = rd.readLine()) != null) {
+                    answer.append(rLine);
+                }
+            }
+
+            catch (IOException e) {
+                // e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Error..." + e.toString(), Toast.LENGTH_LONG).show();
+            }
+            return answer;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            ListDrwaerfilterclass(cls);
+        }
+
+    }// end async task
+
+    // build hash set for list view
+    public void ListDrwaerfilterclass(String cls) {
+        List<Map<String, String>> employeeList = new ArrayList<Map<String, String>>();
+
+        try {
+            jsonResponse = new JSONObject(jsonResult);
+            jsonMainNode = jsonResponse.optJSONArray("user_info");
+
+            for (int i = 0; i < jsonMainNode.length(); i++) {
+                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String name = jsonChildNode.optString("name");
+                String clas = jsonChildNode.optString("class");
+                String outPut=null;
+                if(clas.equals(cls))
+                outPut=name;
+                if(outPut!=null)
+                employeeList.add(createEmployeefilterclass("usernames", outPut));
+            }
+        } catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(),
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        simpleAdapter = new SimpleAdapter(this, employeeList,
+                R.layout.listviewsamp,
+                new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new ModeCallback());
+        listView.setAdapter(simpleAdapter);
+        dialogclass.dismiss();
+    }
+
+    private HashMap<String, String> createEmployeefilterclass(String name, String number) {
+        HashMap<String, String> employeeNameNo = new HashMap<String, String>();
+        employeeNameNo.put(name, number);
+        return employeeNameNo;
     }
 
 
@@ -496,14 +691,14 @@ public class Loginsuccess extends Activity {
 
         try {
             jsonResponse = new JSONObject(jsonResult);
-             jsonMainNode = jsonResponse.optJSONArray("user_info");
+            jsonMainNode = jsonResponse.optJSONArray("user_info");
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 String name = jsonChildNode.optString("name");
                 String outPut;
 
-                 outPut=name;
+                outPut=name;
                 employeeList.add(createEmployee("usernames", outPut));
             }
         } catch (JSONException e) {
@@ -517,7 +712,6 @@ public class Loginsuccess extends Activity {
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new ModeCallback());
         listView.setAdapter(simpleAdapter);
-
         dialog.dismiss();
     }
 
