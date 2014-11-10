@@ -53,7 +53,7 @@ public class AddNewEntry extends ActionBarActivity {
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<String> adapter_state_bg = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, groups);
-        adapter_state
+        adapter_state_bg
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         classs.setAdapter(adapter_state);
         bg.setAdapter(adapter_state_bg);

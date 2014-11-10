@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -47,29 +48,55 @@ import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Loginsuccess extends Activity {
 
-    private String jsonResult;
+    private String jsonResult,names,filterbg;
     JSONArray jsonMainNode;
+    String[] groups;
     JSONObject jsonResponse;
     JSONObject jsonChildNode = null,node = null;
     SimpleAdapter simpleAdapter;
     String url="http://kazmikkhan.comli.com/phpfetchdetails.php";
     private ListView listView;
+    TextView tvbgfilter;
     ProgressDialog dialog;
-
+    Spinner spfilterbg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginsuccess);
         final Bundle b = new Bundle();
         listView = (ListView) findViewById(R.id.listView1);
+        tvbgfilter = (TextView)findViewById(R.id.tvfilterbg);
+        spfilterbg = (Spinner)findViewById(R.id.spinfiltbg);
+        groups = new String[]  {"A+" , "A-" ,"B+","B-","O+" , "O-","AB+" , "AB-" };
+        ArrayAdapter<String> adapter_state_bg = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, groups);
+        adapter_state_bg
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spfilterbg.setAdapter(adapter_state_bg);
+        spfilterbg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filterbg = spfilterbg.getSelectedItem().toString();
+                Toast.makeText(Loginsuccess.this,filterbg,Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         dialog = new ProgressDialog(this);
         dialog.setTitle("Fetching Data");
         dialog.setCancelable(false);
@@ -216,9 +243,12 @@ public class Loginsuccess extends Activity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // if this button is clicked, close
                                     // current activity
-                                    String names =  null;
+                                    names =  null;
+
                                     for (int i = 0; i < count; i++) {
                                         if (checked.valueAt(i) == true) {
+                                           //names+= simpleAdapter.getItem(i).toString()+"\n";
+
                                             names +=listView.getItemAtPosition(i).toString()+"\n";
 
                                         }
@@ -439,6 +469,8 @@ public class Loginsuccess extends Activity {
         simpleAdapter = new SimpleAdapter(this, employeeList,
                 R.layout.listviewsamp,
                 new String[] { "usernames" }, new int[] { R.id.tvlistviewname });
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new ModeCallback());
         listView.setAdapter(simpleAdapter);
 
         dialog.dismiss();
@@ -468,6 +500,34 @@ public class Loginsuccess extends Activity {
         else if (id==R.id.action_newentry){
             Intent k = new Intent(Loginsuccess.this,AddNewEntry.class);
             startActivity(k);
+        }
+        else if(id==R.id.filter)
+        {
+            Dialog dag = new Dialog(Loginsuccess.this);
+            dag.setCancelable(false);
+            dag.setCanceledOnTouchOutside(false);
+            dag.setContentView(R.layout.fileterby);
+            dag.setTitle("Select filters");
+            CheckBox cbbg,cbclass,cbbatch;
+            cbbg = (CheckBox)dag.findViewById(R.id.cbbg);
+            cbclass = (CheckBox)dag.findViewById(R.id.cbclass);
+            cbbatch = (CheckBox)dag.findViewById(R.id.cbbatch);
+            cbbg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked)
+                    {
+                        tvbgfilter.setVisibility(View.VISIBLE);
+                        spfilterbg.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        tvbgfilter.setVisibility(View.GONE);
+                        spfilterbg.setVisibility(View.GONE);
+                    }
+                }
+            });
+            Toast.makeText(Loginsuccess.this,"Filter activated",Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
